@@ -54,6 +54,7 @@ impl Screen {
         for string in strings {
             self.write_line(string);
             self.new_line();
+            if self.cursor / BUF_WIDTH > BUF_HEIGHT { self.scroll_up(); }
         }
     }
 
@@ -66,6 +67,7 @@ impl Screen {
         self.cursor += offset;
         for byte in string.bytes() {
             self.write_char(self.cursor, AsciiChar{char_byte: byte, color_byte: self.color });
+            self.cursor += 1;
         }
     }
 
@@ -74,13 +76,20 @@ impl Screen {
         self.cursor += BUF_WIDTH - current_line_width;
     }
 
+    fn scroll_up(&mut self) {
+        for i in BUF_WIDTH..self.cursor {
+            let char_to_copy = self.read_char(i);
+            self.write_char(i - BUF_WIDTH, char_to_copy);
+        }
+        self.cursor -= BUF_WIDTH;
+    }
+
     pub fn write_char(&mut self, offset: u32, char: AsciiChar) {
         if char.char_byte == 0x0a { self.new_line(); }
         else {
             unsafe {
                 *self.buffer.offset(offset as isize * 2) = char.char_byte;
                 *self.buffer.offset(offset as isize * 2 + 1) = char.color_byte;
-                self.cursor += 1;
             }
         }
     }

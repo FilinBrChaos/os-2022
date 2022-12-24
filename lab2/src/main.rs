@@ -20,14 +20,9 @@ fn panic(_info: &PanicInfo) -> ! {
 pub extern "C" fn _start() -> ! {
     let mut screen = Screen::new(COLOR_BLUE, COLOR_DARK_GRAY, Alignment::Center);
 
-    // write!(screen, "Somethingddddddddddddddddddd\n");
-    // write!(screen, "Something\n");
-
-    write!(screen, "sdf\nasdfad fad sfasdf\nsdf");
-    write!(screen, "asdfa{}", 1);
-
     for i in 0..12 {
-        write!(screen, "Something {0}\n", i * 10);
+        // write!(screen, "Hello world {0}\n", i * 10);
+        write!(screen, "Hello");
     }
 
     loop {}
